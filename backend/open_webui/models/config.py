@@ -140,6 +140,10 @@ class Config(Base):
     @staticmethod
     async def get(key: str, default: Any = None) -> Any:
         """Get a config value by key. Returns default if not set."""
+        if key == 'ui.default_models':
+            from open_webui.nibras import NIBRAS_DEFAULT_MODEL
+            if NIBRAS_DEFAULT_MODEL:
+                return NIBRAS_DEFAULT_MODEL
         if not Config.persistent_enabled_for(key):
             return Config.default_value(key, default)
         async with get_async_db() as db:
@@ -160,11 +164,16 @@ class Config(Base):
         async with get_async_db() as db:
             result = await db.execute(select(Config).where(Config.key.in_(enabled_keys)))
             values = {row.key: row.value for row in result.scalars().all()}
-            return {
+            res = {
                 key: values.get(key, Config.default_value(key))
                 for key in keys
                 if key in values or key in Config.DEFAULTS or key in disabled_values
             }
+            if 'ui.default_models' in keys:
+                from open_webui.nibras import NIBRAS_DEFAULT_MODEL
+                if NIBRAS_DEFAULT_MODEL:
+                    res['ui.default_models'] = NIBRAS_DEFAULT_MODEL
+            return res
 
     @staticmethod
     async def get_namespace(namespace: str) -> dict:

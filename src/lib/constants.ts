@@ -3,8 +3,8 @@
 // LICENSE covers this Open WebUI branding surface, including name, logo,
 // visual, textual, symbolic identifiers, metadata, and surrounding UI.
 // Do not alter, remove, obscure, or replace it except as LICENSE permits:
-// https://docs.openwebui.com/license.
-export const APP_NAME = 'Open WebUI';
+// NIBRAS customization: OFPPT institutional branding
+export const APP_NAME = 'Chat NIBRAS';
 
 export const WEBUI_HOSTNAME = '';
 export const WEBUI_BASE_URL = '';

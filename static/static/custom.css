@@ -1,0 +1,125 @@
+/* ==========================================================================
+   NIBRAS - OFPPT INSTITUTIONAL DESIGN SYSTEM
+   Centralized Theme & Color Tokens for Open WebUI
+   ========================================================================== */
+
+:root {
+	/* Brand Identity (OFPPT) */
+	--nibras-primary: #0066b0;
+	--nibras-primary-hover: #00569e;
+	--nibras-primary-active: #004782;
+	--nibras-primary-subtle: rgba(0, 102, 176, 0.08);
+	--nibras-primary-border: rgba(0, 102, 176, 0.25);
+
+	--nibras-secondary: #0c8447;
+	--nibras-secondary-hover: #0a733e;
+	--nibras-secondary-active: #085e33;
+	--nibras-secondary-subtle: rgba(12, 132, 71, 0.08);
+	--nibras-secondary-border: rgba(12, 132, 71, 0.25);
+
+	--nibras-accent: #0c8447;
+	--nibras-accent-gradient: linear-gradient(135deg, #0066b0 0%, #0c8447 100%);
+
+	/* Semantic Surface & Typography (Light Mode) */
+	--nibras-background: #f8fafc;
+	--nibras-surface: #ffffff;
+	--nibras-surface-subtle: #f1f5f9;
+	--nibras-border: #e2e8f0;
+	--nibras-border-strong: #cbd5e1;
+	--nibras-text: #0f172a;
+	--nibras-text-muted: #64748b;
+
+	/* Focus & Rings */
+	--nibras-ring: rgba(0, 102, 176, 0.4);
+}
+
+.dark {
+	/* Semantic Surface & Typography (Dark Mode - Deep Slate & Navy) */
+	--nibras-background: #090e17;
+	--nibras-surface: #0f172a;
+	--nibras-surface-subtle: #162238;
+	--nibras-border: #1e293b;
+	--nibras-border-strong: #334155;
+	--nibras-text: #f8fafc;
+	--nibras-text-muted: #94a3b8;
+
+	--nibras-primary-subtle: rgba(0, 102, 176, 0.2);
+	--nibras-primary-border: rgba(0, 102, 176, 0.45);
+	--nibras-secondary-subtle: rgba(12, 132, 71, 0.2);
+	--nibras-secondary-border: rgba(12, 132, 71, 0.45);
+
+	/* Focus & Rings */
+	--nibras-ring: rgba(0, 102, 176, 0.55);
+}
+
+/* --------------------------------------------------------------------------
+   Interactive Elements & Brand Accents
+   -------------------------------------------------------------------------- */
+
+/* Text selection */
+::selection {
+	background-color: var(--nibras-primary-subtle);
+	color: var(--nibras-primary);
+}
+
+/* Primary links */
+a:not([class*='text-']):hover {
+	color: var(--nibras-primary);
+}
+
+/* Global Focus rings */
+:focus-visible {
+	outline-color: var(--nibras-primary);
+}
+
+/* Checkbox overrides */
+input[type='checkbox']:checked {
+	background-color: var(--nibras-primary) !important;
+	border-color: var(--nibras-primary) !important;
+}
+
+input[type='checkbox']:focus {
+	box-shadow: 0 0 0 2px var(--nibras-ring) !important;
+}
+
+/* Blue utility overrides mapping to OFPPT primary */
+.bg-blue-600 {
+	background-color: var(--nibras-primary) !important;
+}
+
+.hover\:bg-blue-700:hover {
+	background-color: var(--nibras-primary-hover) !important;
+}
+
+.text-blue-600 {
+	color: var(--nibras-primary) !important;
+}
+
+.dark .text-blue-400 {
+	color: #38bdf8 !important;
+}
+
+.border-blue-600 {
+	border-color: var(--nibras-primary) !important;
+}
+
+.focus\:ring-blue-500:focus {
+	--tw-ring-color: var(--nibras-ring) !important;
+}
+
+/* Active chat / navigation indicator styling */
+#sidebar-chat-item.bg-gray-100,
+#sidebar-chat-item.dark\:bg-gray-800,
+.app-interactive-active {
+	border-left: 3px solid var(--nibras-primary);
+}
+
+/* Scrollbar tinting */
+::-webkit-scrollbar-thumb {
+	background-color: rgba(100, 116, 139, 0.25);
+	border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background-color: var(--nibras-primary);
+}

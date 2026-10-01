@@ -1671,7 +1671,10 @@ ENABLE_PASSWORD_AUTH = os.getenv('ENABLE_PASSWORD_AUTH', 'True').lower() == 'tru
 
 DEFAULT_LOCALE = os.getenv('DEFAULT_LOCALE', '')
 
-DEFAULT_MODELS = os.getenv('DEFAULT_MODELS', None)
+# NIBRAS customization: allow controlling default model via NIBRAS_DEFAULT_MODEL
+from open_webui.nibras import NIBRAS_DEFAULT_MODEL
+
+DEFAULT_MODELS = NIBRAS_DEFAULT_MODEL or os.getenv('DEFAULT_MODELS', None)
 
 DEFAULT_PINNED_MODELS = os.getenv('DEFAULT_PINNED_MODELS', None)
 
@@ -1689,6 +1692,9 @@ try:
 except Exception as e:
     log.exception(f'Error loading MODEL_ORDER_LIST: {e}')
     model_order_list = []
+
+if NIBRAS_DEFAULT_MODEL and NIBRAS_DEFAULT_MODEL not in model_order_list:
+    model_order_list = [NIBRAS_DEFAULT_MODEL] + model_order_list
 
 MODEL_ORDER_LIST = model_order_list
 

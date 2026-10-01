@@ -948,8 +948,10 @@ if LICENSE_PUBLIC_KEY:
 # visual, textual, symbolic identifiers, metadata, and surrounding UI.
 # Do not alter, remove, obscure, or replace it except as LICENSE permits:
 # https://docs.openwebui.com/license.
-WEBUI_NAME = os.getenv('WEBUI_NAME', 'Open WebUI')
-if WEBUI_NAME != 'Open WebUI':
+# NIBRAS customization: Institutional deployment for OFPPT (Pilot < 50 users per License Clause 4)
+from open_webui.nibras import NIBRAS_APP_NAME
+WEBUI_NAME = os.getenv('NIBRAS_APP_NAME', os.getenv('WEBUI_NAME', NIBRAS_APP_NAME))
+if not os.getenv('NIBRAS_APP_NAME') and WEBUI_NAME != NIBRAS_APP_NAME and WEBUI_NAME != 'Open WebUI':
     WEBUI_NAME += ' (Open WebUI)'
 
 # LICENSE covers this Open WebUI branding surface, including this favicon

@@ -1,32 +1,35 @@
 services:
-  ollama:
-    volumes:
-      - ollama:/root/.ollama
-    container_name: ollama
-    pull_policy: always
-    tty: true
-    restart: unless-stopped
-    image: ollama/ollama:${OLLAMA_DOCKER_TAG-latest}
-
   open-webui:
     build:
       context: .
       dockerfile: Dockerfile
-    image: ghcr.io/open-webui/open-webui:${WEBUI_DOCKER_TAG-main}
+      args:
+        USE_SLIM: "true"
+    image: chat-nibras:${WEBUI_DOCKER_TAG:-latest}
     container_name: open-webui
     volumes:
       - open-webui:/app/backend/data
-    depends_on:
-      - ollama
     ports:
-      - ${OPEN_WEBUI_PORT-3000}:8080
+      - ${OPEN_WEBUI_PORT:-3000}:8080
     environment:
-      - 'OLLAMA_BASE_URL=http://ollama:11434'
+      # Désactiver la recherche d'Ollama local
+      - 'ENABLE_OLLAMA_API=False'
+
+      # Configuration de l'API distante et du Modèle
+      - 'OPENAI_API_BASE_URL=${OPENAI_API_BASE_URL:-}'
+      - 'OPENAI_API_KEY=${OPENAI_API_KEY:-}'
+      - 'DEFAULT_MODELS=${DEFAULT_MODELS:-${NIBRAS_DEFAULT_MODEL:-qwen3:8b}}'
+      - 'NIBRAS_DEFAULT_MODEL=${NIBRAS_DEFAULT_MODEL:-${DEFAULT_MODELS:-qwen3:8b}}'
+
+      # Identité visuelle NIBRAS (OFPPT)
       - 'WEBUI_SECRET_KEY='
+      - 'NIBRAS_APP_NAME=${NIBRAS_APP_NAME:-Chat NIBRAS}'
+      - 'NIBRAS_DEFAULT_MODEL=${NIBRAS_DEFAULT_MODEL:-qwen3:8b}'
+      - 'NIBRAS_PRIMARY_COLOR=${NIBRAS_PRIMARY_COLOR:-#0066B0}'
+      - 'NIBRAS_SECONDARY_COLOR=${NIBRAS_SECONDARY_COLOR:-#0C8447}'
     extra_hosts:
       - host.docker.internal:host-gateway
     restart: unless-stopped
 
 volumes:
-  ollama: {}
   open-webui: {}
