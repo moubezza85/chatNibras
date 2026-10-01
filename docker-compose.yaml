@@ -7,29 +7,52 @@ services:
         USE_SLIM: "true"
     image: chat-nibras:${WEBUI_DOCKER_TAG:-latest}
     container_name: open-webui
-    volumes:
-      - open-webui:/app/backend/data
+    restart: always
+
     ports:
-      - ${OPEN_WEBUI_PORT:-3000}:8080
+      - "${OPEN_WEBUI_PORT:-3000}:8080"
+
+    volumes:
+      - open-webui-data:/app/backend/data
+
+    env_file:
+      - path: .env
+        required: false
+
     environment:
       # Désactiver la recherche d'Ollama local
-      - 'ENABLE_OLLAMA_API=False'
+      - ENABLE_OLLAMA_API=False
 
-      # Configuration de l'API distante et du Modèle
-      - 'OPENAI_API_BASE_URL=${OPENAI_API_BASE_URL:-}'
-      - 'OPENAI_API_KEY=${OPENAI_API_KEY:-}'
-      - 'DEFAULT_MODELS=${DEFAULT_MODELS:-${NIBRAS_DEFAULT_MODEL:-qwen3:8b}}'
-      - 'NIBRAS_DEFAULT_MODEL=${NIBRAS_DEFAULT_MODEL:-${DEFAULT_MODELS:-qwen3:8b}}'
+      # Configuration de l'API distante et Modèle LLM
+      - OPENAI_API_BASE_URL=${OPENAI_API_BASE_URL:-https://api.groq.com/openai/v1}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - DEFAULT_MODELS=${DEFAULT_MODELS:-openai/gpt-oss-120b}
+      - NIBRAS_DEFAULT_MODEL=${NIBRAS_DEFAULT_MODEL:-openai/gpt-oss-120b}
 
       # Identité visuelle NIBRAS (OFPPT)
-      - 'WEBUI_SECRET_KEY='
-      - 'NIBRAS_APP_NAME=${NIBRAS_APP_NAME:-Chat NIBRAS}'
-      - 'NIBRAS_DEFAULT_MODEL=${NIBRAS_DEFAULT_MODEL:-qwen3:8b}'
-      - 'NIBRAS_PRIMARY_COLOR=${NIBRAS_PRIMARY_COLOR:-#0066B0}'
-      - 'NIBRAS_SECONDARY_COLOR=${NIBRAS_SECONDARY_COLOR:-#0C8447}'
+      - NIBRAS_APP_NAME=${NIBRAS_APP_NAME:-Chat NIBRAS}
+      - WEBUI_NAME=${NIBRAS_APP_NAME:-Chat NIBRAS}
+      - DEFAULT_LOCALE=${DEFAULT_LOCALE:-fr}
+      - NIBRAS_PRIMARY_COLOR=${NIBRAS_PRIMARY_COLOR:-#0066B0}
+      - NIBRAS_SECONDARY_COLOR=${NIBRAS_SECONDARY_COLOR:-#0C8447}
+      - NIBRAS_ACCENT_COLOR=${NIBRAS_ACCENT_COLOR:-#0C8447}
+
+      # Paramètres généraux et sécurité
+      - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY:-}
+      - CORS_ALLOW_ORIGIN=*
+      - SCARF_NO_ANALYTICS=true
+      - DO_NOT_TRACK=true
+      - ANONYMIZED_TELEMETRY=false
+
     extra_hosts:
-      - host.docker.internal:host-gateway
-    restart: unless-stopped
+      - "host.docker.internal:host-gateway"
+
+    networks:
+      - web-network
 
 volumes:
-  open-webui: {}
+  open-webui-data:
+
+networks:
+  web-network:
+    external: true

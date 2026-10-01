@@ -179,63 +179,14 @@
 					</div>
 
 					<div
-						class=" text-2xl @sm:text-2xl line-clamp-1 flex items-center"
+						class="text-2xl @sm:text-2xl line-clamp-1 flex items-center font-medium text-gray-800 dark:text-gray-100"
 						in:fade={{ duration: 100 }}
 					>
-						{#if selectedModelName}
-							<Tooltip content={selectedModelName} placement="top" className=" flex items-center ">
-								<span class="line-clamp-1">
-									{selectedModelName}
-								</span>
-							</Tooltip>
-						{:else}
-							{$i18n.t('Hello, {{name}}', { name: $user?.name })}
-						{/if}
+						{$config?.name ?? 'Chat Nibras'}
 					</div>
 				</div>
 
-				<div class="flex mt-1 mb-2">
-					<div in:fade={{ duration: 100, delay: 50 }}>
-						{#if selectedModelDescription}
-							<Tooltip
-								className=" w-fit"
-								content={DOMPurify.sanitize(
-									marked.parse(
-										sanitizeResponseContent(selectedModelDescription).replaceAll('\n', '<br>')
-									)
-								)}
-								placement="top"
-							>
-								<div
-									class="mt-0.5 px-2 text-sm font-normal text-gray-500 dark:text-gray-400 line-clamp-2 max-w-xl markdown"
-								>
-									{@html DOMPurify.sanitize(
-										marked.parse(
-											sanitizeResponseContent(selectedModelDescription).replaceAll('\n', '<br>')
-										)
-									)}
-								</div>
-							</Tooltip>
 
-							{#if models[selectedModelIdx]?.info?.meta?.user}
-								<div class="mt-0.5 text-sm font-normal text-gray-400 dark:text-gray-500">
-									{$i18n.t('By')}
-									{#if models[selectedModelIdx]?.info?.meta?.user.community}
-										<a
-											href="https://openwebui.com/m/{models[selectedModelIdx]?.info?.meta?.user
-												.username}"
-											>{models[selectedModelIdx]?.info?.meta?.user.name
-												? models[selectedModelIdx]?.info?.meta?.user.name
-												: `@${models[selectedModelIdx]?.info?.meta?.user.username}`}</a
-										>
-									{:else}
-										{models[selectedModelIdx]?.info?.meta?.user.name}
-									{/if}
-								</div>
-							{/if}
-						{/if}
-					</div>
-				</div>
 			{/if}
 
 			<div class="text-base font-normal @md:max-w-3xl w-full py-3 {atSelectedModel ? 'mt-2' : ''}">

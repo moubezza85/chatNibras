@@ -40,7 +40,7 @@
 
 	$: models = modelIds.map((id) => $_models.find((m) => m.id === id));
 	$: selectedModel = atSelectedModel ?? models[selectedModelIdx];
-	$: selectedModelName = resolveLocalizedModelName(selectedModel, $i18n.language);
+	$: selectedModelName = $config?.name ?? 'Chat Nibras';
 	$: selectedModelDescription = resolveLocalizedModelDescription(selectedModel, $i18n.language);
 	$: selectedSuggestionPrompts =
 		resolveLocalizedModelPromptSuggestions(atSelectedModel, $i18n.language) ??
@@ -117,39 +117,7 @@
 					{/if}
 				</div>
 
-				<div in:fade={{ duration: 200, delay: 200 }}>
-					{#if selectedModelDescription}
-						<div
-							class="mt-0.5 text-base font-normal text-gray-500 dark:text-gray-400 line-clamp-3 markdown"
-						>
-							{@html DOMPurify.sanitize(
-								marked.parse(
-									sanitizeResponseContent(selectedModelDescription).replaceAll('\n', '<br>')
-								)
-							)}
-						</div>
-						{#if models[selectedModelIdx]?.info?.meta?.user}
-							<div class="mt-0.5 text-sm font-normal text-gray-400 dark:text-gray-500">
-								{$i18n.t('By')}
-								{#if models[selectedModelIdx]?.info?.meta?.user.community}
-									<a
-										href="https://openwebui.com/m/{models[selectedModelIdx]?.info?.meta?.user
-											.username}"
-										>{models[selectedModelIdx]?.info?.meta?.user.name
-											? models[selectedModelIdx]?.info?.meta?.user.name
-											: `@${models[selectedModelIdx]?.info?.meta?.user.username}`}</a
-									>
-								{:else}
-									{models[selectedModelIdx]?.info?.meta?.user.name}
-								{/if}
-							</div>
-						{/if}
-					{:else}
-						<div class=" text-gray-400 dark:text-gray-500 line-clamp-1 font-p">
-							{$i18n.t('How can I help you today?')}
-						</div>
-					{/if}
-				</div>
+
 			</div>
 		</div>
 

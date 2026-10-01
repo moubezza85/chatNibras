@@ -31,7 +31,7 @@ ARG UID
 ARG GID
 
 # Set Node.js options (heap limit Allocation failed - JavaScript heap out of memory)
-ENV NODE_OPTIONS="--max-old-space-size=4096"
+ENV NODE_OPTIONS="--max-old-space-size=8192"
 
 WORKDIR /app
 
@@ -39,11 +39,12 @@ WORKDIR /app
 RUN apk add --no-cache git
 
 COPY package.json package-lock.json ./
-RUN npm ci --force
-
 COPY . .
 ENV APP_BUILD_HASH=${BUILD_HASH}
-RUN npm run build && \
+RUN if [ ! -f build/index.html ]; then \
+        npm ci --force && \
+        npm run build; \
+    fi && \
     if [ "$USE_SLIM" = "true" ]; then find build -type f -name '*.map' -delete; fi
 
 # Prepare backend ownership before the final copy so static assets occupy one layer.

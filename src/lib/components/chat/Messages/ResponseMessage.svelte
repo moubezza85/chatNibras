@@ -185,7 +185,7 @@
 	let showDeleteConfirm = false;
 
 	let model = null;
-	$: localizedModelName = model ? resolveLocalizedModelName(model, $i18n.language) : message.model;
+	$: localizedModelName = $config?.name ?? 'Chat Nibras';
 	$: model = $models.find((m) => m.id === message.model);
 
 	$: statusEntries = message?.statusHistory ?? [...(message?.status ? [message?.status] : [])];
