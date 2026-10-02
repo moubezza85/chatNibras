@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   open-webui:
     build:
@@ -16,8 +18,7 @@ services:
       - open-webui-data:/app/backend/data
 
     env_file:
-      - path: .env
-        required: false
+      - .env
 
     environment:
       # Désactiver la recherche d'Ollama local
