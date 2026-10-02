@@ -1298,16 +1298,7 @@
 						</div>
 					</div>
 
-					{#if $visiblePinnedModels.length > 0}
-						<SidebarSection
-							id="sidebar-models"
-							bind:open={showPinnedModels}
-							name={$i18n.t('Models')}
-							dragAndDrop={false}
-						>
-							<PinnedModelList bind:selectedChatId {shiftKey} />
-						</SidebarSection>
-					{/if}
+
 
 					{#if ($config?.features?.enable_notes ?? false) && ($user?.role === 'admin' || ($user?.permissions?.features?.notes ?? true)) && $pinnedNotes.length > 0}
 						<SidebarSection
