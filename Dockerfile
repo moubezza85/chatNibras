@@ -156,8 +156,9 @@ COPY --chown=$UID:$GID ./backend/requirements*.txt ./
 # Set UV_LINK_MODE to copy to prevent 0-byte file corruption in QEMU arm64 cross-builds
 ENV UV_LINK_MODE=copy
 
-RUN --mount=from=ghcr.io/astral-sh/uv:0.12.10,source=/uv,target=/bin/uv \
-    set -e; \
+COPY --from=ghcr.io/astral-sh/uv:0.12.10 /uv /bin/uv
+
+RUN set -e; \
     if [ "$USE_SLIM" = "true" ]; then \
     uv pip install --system -r requirements-slim.txt --no-cache-dir; \
     elif [ "$USE_CUDA" = "true" ]; then \
