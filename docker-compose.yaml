@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
       args:
-        USE_SLIM: "true"
+        USE_SLIM: "false"
     image: chat-nibras:${WEBUI_DOCKER_TAG:-latest}
     container_name: open-webui
     restart: always
@@ -23,12 +23,14 @@ services:
     environment:
       # Désactiver la recherche d'Ollama local
       - ENABLE_OLLAMA_API=False
+      - ENABLE_VERSION_UPDATE_CHECK=false
 
       # Configuration de l'API distante et Modèle LLM
       - OPENAI_API_BASE_URL=${OPENAI_API_BASE_URL:-https://api.groq.com/openai/v1}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - DEFAULT_MODELS=${DEFAULT_MODELS:-openai/gpt-oss-120b}
-      - NIBRAS_DEFAULT_MODEL=${NIBRAS_DEFAULT_MODEL:-openai/gpt-oss-120b}
+      # Modèle LLM par défaut (optionnel, configurable depuis l'interface admin)
+      - DEFAULT_MODELS=${DEFAULT_MODELS:-}
+      - NIBRAS_DEFAULT_MODEL=${NIBRAS_DEFAULT_MODEL:-}
 
       # Identité visuelle NIBRAS (OFPPT)
       - NIBRAS_APP_NAME=${NIBRAS_APP_NAME:-Chat NIBRAS}

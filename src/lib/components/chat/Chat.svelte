@@ -208,11 +208,11 @@
 			(modelId) => modelId && availableModels.includes(modelId)
 		);
 
-		if (normalized.length === 0 && $settings?.models?.length) {
-			normalized = $settings.models.filter((modelId) => availableModels.includes(modelId));
-		}
 		if (normalized.length === 0 && defaultModels.length > 0) {
 			normalized = defaultModels.filter((modelId) => availableModels.includes(modelId));
+		}
+		if (normalized.length === 0 && $settings?.models?.length) {
+			normalized = $settings.models.filter((modelId) => availableModels.includes(modelId));
 		}
 		if (normalized.length === 0) {
 			normalized = availableModels.length > 0 ? [availableModels[0]] : [''];
@@ -225,10 +225,15 @@
 		const modelSearchParam =
 			$page.url.searchParams.get('models') || $page.url.searchParams.get('model');
 
+		const availableModelIds = getAvailableModelIds();
+		const hasInvalidModel =
+			selectedModels?.length > 0 &&
+			selectedModels.some((modelId) => modelId && !availableModelIds.includes(modelId));
+
 		if (
 			chatIdProp === '' &&
 			$models.length > 0 &&
-			!selectedModels?.some((modelId) => modelId) &&
+			(!selectedModels?.some((modelId) => modelId) || hasInvalidModel) &&
 			!modelSearchParam
 		) {
 			const fallbackModels = normalizeSelectedModels(selectedModels);
@@ -2635,8 +2640,17 @@
 		if (selectedModels.length === 0) {
 			toast.error($i18n.t('Model not selected'));
 		} else {
-			const modelId = selectedModels[0];
-			const model = $models.filter((m) => m.id === modelId).at(0);
+			let modelId = selectedModels[0];
+			let model = $models.filter((m) => m.id === modelId).at(0);
+
+			if (!model) {
+				const fallback = normalizeSelectedModels(selectedModels);
+				if (fallback.length > 0 && fallback[0]) {
+					selectedModels = fallback;
+					modelId = selectedModels[0];
+					model = $models.filter((m) => m.id === modelId).at(0);
+				}
+			}
 
 			if (!model) {
 				toast.error($i18n.t('Model not found'));
@@ -3247,6 +3261,12 @@
 			: atSelectedModel !== undefined
 				? [atSelectedModel.id]
 				: selectedModels;
+
+		const availableModelIds = getAvailableModelIds();
+		if (!modelId && selectedModelIds.some((id) => id && !availableModelIds.includes(id))) {
+			selectedModelIds = normalizeSelectedModels(selectedModelIds);
+			selectedModels = selectedModelIds;
+		}
 		if (!modelId && history.messages[parentId]) {
 			history.messages[parentId].models = [...selectedModelIds];
 		}
